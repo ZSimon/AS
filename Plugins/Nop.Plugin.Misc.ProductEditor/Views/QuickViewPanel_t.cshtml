@@ -1,0 +1,96 @@
+﻿@using System.Web.Mvc.Html;
+@using Nop.Web.Framework.UI;
+
+<!--model Nop.Plugin.Misc.ProductEditor.Models.PEDictionaryModel-->
+
+@{
+    Html.AppendScriptParts("~/Plugins/Misc.ProductEditor/Scripts/libraries/bootstrap.min.js");
+    /*trenutno sem ga izkljucil*/
+    //Html.AppendScriptParts(ResourceLocation.Foot, "~/Plugins/Misc.ProductEditor/Scripts/ProductDetailsEditor.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/Plugins/Misc.ProductEditor/Scripts/qa.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/Plugins/Misc.ProductEditor/Scripts/libraries/circles.min.js");
+
+    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Misc.ProductEditor/Content/css/style.css");
+    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Misc.ProductEditor/Content/css/bootstrap.min.css");
+    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Misc.ProductEditor/Content/css/QA.css");
+}
+
+@* ReSharper disable once NativeTypePrototypeExtending *@
+<script>
+    var T = {};
+    
+    String.prototype.format = function (args) {
+        var str = this;
+        return str.replace(String.prototype.format.regex, function (item) {
+            var intVal = parseInt(item.substring(1, item.length - 1));
+            var replace;
+            if (intVal >= 0) {
+                replace = args[intVal];
+            } else if (intVal === -1) {
+                replace = "{";
+            } else if (intVal === -2) {
+                replace = "}";
+            } else {
+                replace = "";
+            }
+            return replace;
+        });
+    };
+    String.prototype.format.regex = new RegExp("{-?[0-9]+}", "g");
+    
+    $(function () {
+        @*
+        var language_name="@WorkContext.WorkingLanguage.UniqueSeoCode";
+        var translate_name = "qaTranslate-" + language_name;
+        var qa_translate = localStorage.getItem(translate_name);
+
+        if (qa_translate == null) {
+        }
+        *@
+        
+        $.ajax({
+            url: './ProductEditor/GetTranslations/',
+            type: "GET",
+            dataType: 'json',
+            success: function (data) {
+                T = data.lcStrings;
+            },
+            error: function () {
+                alert("@T("qa.gettranslationerror")");
+            },
+            ifModified:true
+            //, async:   false
+        });
+        //var test = "Html.Action("GetTranslations", "ProductEditor")";
+        var quick_view_panel = '<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">'+
+        '<div class="modal-dialog" role="document">'+
+           '<div class="modal-content">'+
+             '<div class="modal-body">'+
+                '<div id="productDetaildialog">@T("qa.loading")</div>' +
+             '</div>'+
+            '</div>'+
+        '</div>'+
+        '</div>';
+
+        var quick_view_panel = '<Input type="button" value="test" id="expires_conditional" />';
+
+        var as_circle =
+            '<div id="profile_circles" class="profile-circles">' +
+                '<div id="circle_0" class="smart-circle qa-tooltip"></div>' +
+            '</div>'
+
+        var as_circle_mob =
+            '<div id="profile_circles_mob" class="profile-circles">' +
+                '<div id="circle_0_mob" class="smart-circle qa-tooltip"></div>' +
+            '</div>'
+
+        var el = $("div.desktop-header-right > div.desktop-cart");
+        var el_mob = $("div.responsive-nav-wrapper > div.shopping-cart-link");
+        $(as_circle).insertBefore(el);
+        $(as_circle_mob).insertAfter(el_mob);
+
+        $("body").prepend(quick_view_panel);
+        //$_ProductDetailsEditor = "@Url.Action("ProductDetailsEditor", "ProductEditor")";
+    });
+
+</script>

@@ -1,0 +1,8 @@
+﻿Group: Misc
+FriendlyName: Product Editor
+SystemName: Misc.ProductEditor
+Version: 3.70
+SupportedVersions: 3.70
+Author: Simon Zupan
+DisplayOrder: 1
+FileName: Nop.Plugin.Misc.ProductEditor.dll

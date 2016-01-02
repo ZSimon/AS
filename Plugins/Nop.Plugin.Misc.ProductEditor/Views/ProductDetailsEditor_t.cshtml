@@ -1,0 +1,114 @@
+﻿<!--old version-->
+@model Nop.Plugin.Misc.ProductEditor.Models.ProductIngredientModel
+@{
+    string ImageRoot = "~/Plugins/Misc.ProductEditor/Content/Img/";
+    Layout = null;
+}
+
+<!--header-->
+<div class="container">
+    <div class="row header-dig">
+        <img src="@Url.Content(ImageRoot + "logo.jpg")" alt="" />
+    </div>
+</div>
+<!--/header-->
+<!--product-main-con-->
+<div class="container product-main-con">
+    <div class="row">
+        <!--slider-->
+        <div class="col-md-8 left-paddind1">
+            <div data-ride="carousel" class="carousel slide">
+                <div role="listbox" class="carousel-inner">
+                    <div class="item active" id="BigItem_@Model.Id" tag="@Model.Id" style="top: 20px;">
+                        <img src="@Url.Content(ImageRoot + Model.ProductImage)" alt="" />
+                        <div style="top: -18px;">@Model.ProductName</div>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-button"><a href="#">EDIT</a></div>
+        </div>
+        <!--/slider-->
+        <!--right-side-->
+        <div class="col-md-4">
+            <div class="text1">SCENTS</div>
+
+            <div class="top-arrow-button"><img id="btn_up" src="@Url.Content(ImageRoot + "top-arrow.png")" alt="" /></div>
+            <div id="grediant-div" class="right-main-link">
+                
+                <ul>
+                    @foreach (var item in Model.Ingredient)
+                    {
+                        <li class="subitem" id="Item_@item.Id" itemid="@item.Id" price="@item.Price" style="display:none"><img src="@Url.Content(ImageRoot + item.Image)" alt="" /><span>@item.Name</span></li>
+                    }
+                </ul>
+            </div>
+            <div class="top-arrow-button"><img id="btn_down" src="@Url.Content(ImageRoot + "bottom-arrow.png")" alt="" /></div>
+            <div style="clear:both"></div>
+            <div id="kn-box" class="kn-box">
+                @Model.Price
+            </div>
+
+            <div class="sub-con">
+                <div class="save-button"><a href="#">SAVE</a></div>
+            </div>
+
+            <div class="buy-button"><a href="#">BUY</a></div>
+
+
+        </div>
+        <!--/right-side-->
+    </div>
+
+    <div class="row">
+        <div class="desc">
+            <h3>Description</h3>
+            <p>@Model.Description</p>
+        </div>
+    </div>
+</div>
+<!--/product-main-con-->
+
+<script>
+    $(document).ready(function () {
+        $('.carousel').carousel({
+            interval: false,
+            pause: true
+        });
+        
+        /*-menu z sestavinami*/
+        var $ingredients = $(".subitem").hide();
+        $ingredients.slice(0, 4).addClass("selected_subitem");
+        $(".selected_subitem").show();
+
+        $("#btn_up").click(function () {
+            debugger;
+            var count = $(".subitem").length;
+            if (count > 4) {
+                var id = $(".selected_subitem:first").prev().attr("id");
+                if (id != undefined && id != "undefined" && id != "") {
+                    var lastId = $(".selected_subitem:last").attr("id");
+                    $("#" + lastId).hide();
+                    $("#" + lastId).removeClass("selected_subitem");
+                    $("#" + id).addClass("selected_subitem");
+                    $("#" + id).show();
+                }
+            }
+        });
+
+        $("#btn_down").click(function () {
+           
+            var count = $(".subitem").length;
+            if (count > 4) {
+                var id = $(".selected_subitem:last").next().attr("id");
+                if (id != undefined && id != "undefined" && id != "") {
+                    var firstId = $(".selected_subitem:first").attr("id");
+                    $("#" + firstId).hide();
+                    $("#" + firstId).removeClass("selected_subitem");
+                    $("#" + id).addClass("selected_subitem")
+                    $("#" + id).show();
+                }
+            }
+        });
+        /*menu z sestavinami-*/
+    });
+</script>
